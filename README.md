@@ -32,6 +32,7 @@ What I Do
 
 
 Refs.
+
 QNN Theano version paper
 https://arxiv.org/abs/1609.07061 
 
