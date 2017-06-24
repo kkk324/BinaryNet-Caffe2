@@ -43,7 +43,8 @@ data, label = models.AddInput(
 softmax = models.AddLeNetModel(test_model, data)
 models.AddAccuracy(test_model, softmax, label)
 
-print(str(train_model.param_init_net.Proto()) + '\n...')
+#print(str(train_model.param_init_net.Proto()) + '\n...')
+#print(str(test_model.param_init_net.Proto()) + '\n...')
 
 print('Training...')
 # The parameter initialization network only needs to be run once.
@@ -62,13 +63,22 @@ for i in range(total_iters):
     print('iter {0} loss = {1} '.format(i, loss[i]))
     print('         accuracy = {0} '.format(accuracy[i]))
 
+# store params of train_model
+train_params = {p: workspace.FetchBlob(p) for p in train_model.GetParams()}
+
 # run a test pass on the test net
 print('Testing...')
-test_model.params = train_model.params # TODO : correctly init test model
 workspace.RunNetOnce(test_model.param_init_net)
 workspace.CreateNet(test_model.net, overwrite=True)
 test_accuracy = np.zeros(100)
-for i in range(100):
+
+# set params of test_model according to the stored train_params
+for p in train_params:
+    print(p)
+    workspace.FeedBlob(p, train_params[p])
+
+test_iter = 100
+for i in range(test_iter):
     workspace.RunNet(test_model.net.Proto().name)
     test_accuracy[i] = workspace.FetchBlob('accuracy')
 
