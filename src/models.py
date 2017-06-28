@@ -56,12 +56,13 @@ def AddMLP_BN(model, data):
 
     # NCHW: 64 x 1 x 28 x 28 -> 64 x 4096
     fc2 = brew.fc(model, drop1, 'fc2', dim_in=1 * 28 * 28, dim_out=num_units)
+    
+    
     fc2_reshaped = model.Reshape(
                                  [fc2],
                                  ['fc2_reshaped'],
-                                 shape=(4)
+                                 shape=(4,2)
     )
-    
     
 
     # bn2 = brew.spatial_bn(model, fc2, 'bn2', num_units, epsilon=1e-3, momentum=0.9, is_test=is_test)
