@@ -5,16 +5,14 @@ Goal:
 Porting QNN(BNN) from Theano version to Caffe2 version.
 
 ## TODO:
-- [x] ROIAlign
-- [x] COCO Data Provider
-- [x] Resnet50
-- [x] Feature Pyramid Network
-- [x] Anchor and ROI layer
-- [x] Mask layer
-- [x] Speedup anchor layer with cython
-- [x] Combining all modules together.
-- [x] Testing and debugging (in progress)
-- [ ] Training / evaluation on COCO
+- [x] MNIST with LeNet
+- [x] MNIST with layers from QNN paper, without Batch Normalization, without Binarization.
+- [ ] MNIST with layers from QNN paper, with Batch Normalization, without Binarization.(in progress)
+- [ ] Binarization functions
+- [ ] Layers with Binarization
+- [ ] MNIST with layers from QNN paper, with Batch Normalization, with Binarization.
+- [ ] Testing and debugging (in progress)
+- [ ] Training / evaluation on other dataset
 
 ## Acknowledgment
 
