@@ -42,6 +42,44 @@ def AddMLP(model, data):
     softmax = brew.softmax(model, fc5, 'softmax')
     return softmax
 
+
+
+def AddMLP_BN(model, data):
+    '''
+    Implement MLP model on MNIST
+    '''
+    # number of nuerons in fc layer
+    num_units = 4096
+   
+    # NCHW: 64 x 1 x 28 x 28 -> 64 x 1 x 28 x 28
+    drop1 = brew.dropout(model, data, 'drop1', ratio=0.5, is_test=0)
+
+    # NCHW: 64 x 1 x 28 x 28 -> 64 x 4096
+    fc2 = brew.fc(model, drop1, 'fc2', dim_in=1 * 28 * 28, dim_out=num_units)
+    fc2_reshaped = model.Reshape(
+                                 [fc2],
+                                 ['fc2_reshaped'],
+                                 shape=(4)
+    )
+    
+    
+
+    # bn2 = brew.spatial_bn(model, fc2, 'bn2', num_units, epsilon=1e-3, momentum=0.9, is_test=is_test)
+    #relu2 = brew.relu(model, fc2, 'relu2')
+
+    #fc3 = brew.fc(model, relu2, 'fc3', dim_in=num_units, dim_out=num_units)
+    # bn3 = brew.spatial_bn(model, fc3, 'bn3', bn_units, epsilon=1e-3, momentum=0.9, is_test=is_test)
+    #relu3 = brew.relu(model, fc3, 'relu3')
+
+    #fc4 = brew.fc(model, relu3, 'fc4', dim_in=num_units, dim_out=num_units)
+    # bn4 = brew.spatial_bn(model, fc4, 'bn4', bn_units, epsilon=1e-3, momentum=0.9, is_test=is_test)
+    #relu4 = brew.relu(model, fc4, 'relu4')
+
+    #fc5 = brew.fc(model, relu4, 'fc5', dim_in=num_units, dim_out=10) # 10 for 10-classes
+    # bn5 = brew.spatial_bn(model, fc5, 'bn5', 10, epsilon=1e-3, momentum=0.9, is_test=is_test)
+    softmax = brew.softmax(model, fc2, 'softmax')
+    return softmax
+
 def AddAccuracy(model, softmax, label):
     accuracy = brew.accuracy(model, [softmax, label], "accuracy")
     return accuracy

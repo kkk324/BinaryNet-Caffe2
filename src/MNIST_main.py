@@ -25,7 +25,8 @@ data, label = models.AddInput(
     train_model, batch_size=64,
     db=os.path.join(utils.data_folder, 'mnist-train-nchw-leveldb'),
     db_type='leveldb')
-softmax = models.AddLeNetModel(train_model, data)
+#softmax = models.AddLeNetModel(train_model, data)
+softmax = models.AddMLP(train_model, data)
 models.AddTrainingOperators(train_model, softmax, label)
 models.AddBookkeepingOperators(train_model)
 
@@ -40,29 +41,59 @@ data, label = models.AddInput(
     test_model, batch_size=100,
     db=os.path.join(utils.data_folder, 'mnist-test-nchw-leveldb'),
     db_type='leveldb')
-softmax = models.AddLeNetModel(test_model, data)
+#softmax = models.AddLeNetModel(test_model, data)
+softmax = models.AddMLP(test_model, data)
 models.AddAccuracy(test_model, softmax, label)
 
 #print(str(train_model.param_init_net.Proto()) + '\n...')
 #print(str(test_model.param_init_net.Proto()) + '\n...')
+
 
 print('Training...')
 # The parameter initialization network only needs to be run once.
 workspace.RunNetOnce(train_model.param_init_net)
 # creating the network
 workspace.CreateNet(train_model.net, overwrite=True)
+
+
+
+
 # set the number of iterations and track the accuracy & loss
 total_iters = 200
 accuracy = np.zeros(total_iters)
 loss = np.zeros(total_iters)
 # Now, we will manually run the network for 200 iterations. 
-for i in range(total_iters):
+
+data_array = []
+drop1_array = []
+fc2_array = []
+
+#for i in range(total_iters):
+for i in range(1):
     workspace.RunNet(train_model.net)
     accuracy[i] = workspace.FetchBlob('accuracy')
     loss[i] = workspace.FetchBlob('loss')
-    print('iter {0} loss = {1} '.format(i, loss[i]))
+    #print('iter {0} loss = {1} '.format(i, loss[i]))
     print('         accuracy = {0} '.format(accuracy[i]))
+    
+    print("Current blobs in the workspace: {}".format(workspace.Blobs()))
 
+    print("Workspace has blob 'data'? {}".format(workspace.HasBlob("data")))
+    #print("Fetched data:\n{}".format(workspace.FetchBlob("data")))
+    data_array.append(workspace.FetchBlob("data"))
+    print('data_array',np.shape(data_array))
+
+
+    print("Workspace has blob 'drop1'? {}".format(workspace.HasBlob("drop1")))
+    #print("Fetched drop1:\n{}".format(workspace.FetchBlob("drop1")))
+    drop1_array.append(workspace.FetchBlob("drop1"))
+    print('drop1_array',np.shape(drop1_array))
+
+    print("Workspace has blob 'fc2'? {}".format(workspace.HasBlob("fc2")))
+    #print("Fetched fc2:\n{}".format(workspace.FetchBlob("fc2")))
+    fc2_array.append(workspace.FetchBlob("fc2"))
+    print('fc2_array',np.shape(fc2_array))
+ 
 # store params of train_model
 train_params = {p: workspace.FetchBlob(p) for p in train_model.GetParams()}
 
