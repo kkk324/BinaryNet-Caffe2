@@ -1,5 +1,4 @@
 import os
-import numpy as np
 from caffe2.python import core, model_helper, net_drawer, workspace, visualize, brew
 
 def AddLeNetModel(model, data):
@@ -18,34 +17,31 @@ def AddLeNetModel(model, data):
     softmax = brew.softmax(model, pred, 'softmax')
     return softmax
 
-def AddMLP(model, data, batch_size):
+def AddMLP(model, data):
     '''
     Implement MLP model on MNIST
     '''
-    num_units = 4096 # number of nuerons in fc layer
-    num_labels = 10 # for 10 classes in mnist
+    # number of nuerons in fc layer
+    num_units = 4096
     drop1 = brew.dropout(model, data, 'drop1', ratio=0.5, is_test=0)
 
     fc2 = brew.fc(model, drop1, 'fc2', dim_in=1 * 28 * 28, dim_out=num_units)
-    model.Reshape([fc2], [fc2, 'fc2_old_shape'], shape=(batch_size, num_units, 1, 1))
-    bn2 = brew.spatial_bn(model, fc2, 'bn2', num_units, epsilon=1e-4, momentum=0.9)
-    relu2 = brew.relu(model, bn2, 'relu2')
+    # bn2 = brew.spatial_bn(model, fc2, 'bn2', num_units, epsilon=1e-3, momentum=0.9, is_test=is_test)
+    relu2 = brew.relu(model, fc2, 'relu2')
 
     fc3 = brew.fc(model, relu2, 'fc3', dim_in=num_units, dim_out=num_units)
-    model.Reshape([fc3], [fc3, 'fc3_old_shape'], shape=(batch_size, num_units, 1, 1))
-    bn3 = brew.spatial_bn(model, fc3, 'bn3', num_units, epsilon=1e-4, momentum=0.9)
-    relu3 = brew.relu(model, bn3, 'relu3')
+    # bn3 = brew.spatial_bn(model, fc3, 'bn3', bn_units, epsilon=1e-3, momentum=0.9, is_test=is_test)
+    relu3 = brew.relu(model, fc3, 'relu3')
 
     fc4 = brew.fc(model, relu3, 'fc4', dim_in=num_units, dim_out=num_units)
-    model.Reshape([fc4], [fc4, 'fc4_old_shape'], shape=(batch_size, num_units, 1, 1))
-    bn4 = brew.spatial_bn(model, fc4, 'bn4', num_units, epsilon=1e-4, momentum=0.9)
-    relu4 = brew.relu(model, bn4, 'relu4')
+    # bn4 = brew.spatial_bn(model, fc4, 'bn4', bn_units, epsilon=1e-3, momentum=0.9, is_test=is_test)
+    relu4 = brew.relu(model, fc4, 'relu4')
 
-    fc5 = brew.fc(model, relu4, 'fc5', dim_in=num_units, dim_out=num_labels)
-    model.Reshape([fc5], [fc5, 'fc5_old_shape'], shape=(batch_size, num_labels, 1, 1))
-    bn5 = brew.spatial_bn(model, fc5, 'bn5', num_labels, epsilon=1e-4, momentum=0.9)
-    softmax = brew.softmax(model, bn5, 'softmax')
+    fc5 = brew.fc(model, relu4, 'fc5', dim_in=num_units, dim_out=10) # 10 for 10-classes
+    # bn5 = brew.spatial_bn(model, fc5, 'bn5', 10, epsilon=1e-3, momentum=0.9, is_test=is_test)
+    softmax = brew.softmax(model, fc5, 'softmax')
     return softmax
+
 
 
 def AddMLP_BN(model, data):
