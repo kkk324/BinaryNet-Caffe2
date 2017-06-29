@@ -26,7 +26,7 @@ data, label = models.AddInput(
     db=os.path.join(utils.data_folder, 'mnist-train-nchw-leveldb'),
     db_type='leveldb')
 #softmax = models.AddLeNetModel(train_model, data)
-softmax = models.AddMLP(train_model, data, batch_size=64)
+softmax = models.AddMLP_BN(train_model, data)
 models.AddTrainingOperators(train_model, softmax, label)
 models.AddBookkeepingOperators(train_model)
 
@@ -42,7 +42,7 @@ data, label = models.AddInput(
     db=os.path.join(utils.data_folder, 'mnist-test-nchw-leveldb'),
     db_type='leveldb')
 #softmax = models.AddLeNetModel(test_model, data)
-softmax = models.AddMLP(test_model, data, batch_size=100)
+softmax = models.AddMLP_BN(test_model, data)
 models.AddAccuracy(test_model, softmax, label)
 
 #print(str(train_model.param_init_net.Proto()) + '\n...')
