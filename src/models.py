@@ -136,4 +136,6 @@ def AddBookkeepingOperators(model):
     # statistics of the parameter, such as mean, std, min and max.
     for param in model.params:
         model.Summarize(param, [], to_file=1)
-model.Summarize(model.param_to_grad[param], [], to_file=1)
+        model.Summarize(model.param_to_grad[param], [], to_file=1)
+
+
