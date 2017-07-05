@@ -68,12 +68,12 @@ data_array = []
 drop1_array = []
 fc2_array = []
 
-#for i in range(total_iters):
-for i in range(1):
+for i in range(total_iters):
+#for i in range(1):
     workspace.RunNet(train_model.net)
     accuracy[i] = workspace.FetchBlob('accuracy')
     loss[i] = workspace.FetchBlob('loss')
-    #print('iter {0} loss = {1} '.format(i, loss[i]))
+    print('iter {0} loss = {1} '.format(i, loss[i]))
     print('         accuracy = {0} '.format(accuracy[i]))
     
     print("Current blobs in the workspace: {}".format(workspace.Blobs()))
