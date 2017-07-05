@@ -7,11 +7,11 @@ Porting QNN(BNN) from Theano version to Caffe2 version.
 ## TODO:
 - [x] MNIST with LeNet
 - [x] MNIST with layers from QNN paper, without Batch Normalization, without Binarization.
-- [ ] MNIST with layers from QNN paper, with Batch Normalization, without Binarization.(in progress)
-- [ ] Binarization functions
+- [x] MNIST with layers from QNN paper, with Batch Normalization, without Binarization.
+- [ ] Binarization functions (in progress)
 - [ ] Layers with Binarization
 - [ ] MNIST with layers from QNN paper, with Batch Normalization, with Binarization.
-- [ ] Testing and debugging (in progress)
+- [ ] Testing and debugging 
 - [ ] Training / evaluation on other dataset
 
 ## Acknowledgment
