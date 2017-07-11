@@ -50,6 +50,11 @@ models.AddAccuracy(test_model, softmax, label)
 
 
 print('Training...')
+
+train_model.param_init_net.RunAllOnGPU()
+train_model.net.RunAllOnGPU()
+
+
 # The parameter initialization network only needs to be run once.
 workspace.RunNetOnce(train_model.param_init_net)
 # creating the network
@@ -59,7 +64,7 @@ workspace.CreateNet(train_model.net, overwrite=True)
 
 
 # set the number of iterations and track the accuracy & loss
-total_iters = 200
+total_iters = 1000
 accuracy = np.zeros(total_iters)
 loss = np.zeros(total_iters)
 # Now, we will manually run the network for 200 iterations. 
