@@ -17,7 +17,11 @@ expected =
 [[1.  1.  0.  1.  1.  0.  1.  0.  0.  0.  1.  1.  0.  1.  0.  1.  1.  1. ...
 
 '''
+import sys
+sys.path.append("../src")
 
+import binary_tool
+import numpy as np
 import re
 
 def flatten_from_file(fd):
@@ -28,26 +32,38 @@ def flatten_from_file(fd):
                 array.append(float(x))
     return array
 
-def comparison(input_fd_name, expected_fd_name):
+# fn : testing function
+# fracton : there is a little bit precision different between Theano and Caffe
+def comparison(fn, input_fd_name, expected_fd_name, fraction):
     # Reading the data from file and flat to 1d list
     f_input = open(input_fd_name, "r")
     inputs = flatten_from_file(f_input)
+
+    inputs = np.array(inputs).astype(np.float32)
+    outputs = fn(inputs)
 
     f_expected = open(expected_fd_name, "r")
     expecteds = flatten_from_file(f_expected)
 
     # Perform the element-wise comparison one by one
-    assert len(inputs) == len(expecteds), "len(input) = %r, len(expecteds) = %r" \
-        % (len(inputs), len(expecteds))
+    assert len(outputs) == len(expecteds), "len(input) = %r, len(expecteds) = %r" \
+        % (len(outputs), len(expecteds))
 
-    for i in range(0, len(inputs)):
-        assert inputs[i] == expecteds[i], "input = %r, expected = %r" \
-            % (inputs[i], expecteds[i])
+    for i in range(0, len(outputs)):
+        out = round(outputs[i], fraction)
+        exp = round(expecteds[i], fraction)
+        assert out == exp, "input = %r, expected = %r" % (out, exp)
 
-def test_round3():
-    comparison('input.txt', 'expected.txt')
+# def test_round3():
+#     comparison(binary_tool.round3, 'input.txt', 'expected.txt', 5)
 
-test_round3()
+# test_round3()
+
+def test_hard_sigmoid():
+    # test failed against fraction above 5
+    comparison(binary_tool.hard_sigmoid, 'clip_input.txt', 'clip_output.txt', 5)
+
+test_hard_sigmoid()
 
 # TODO if we has a round3 implementation
 # static test : by file format
