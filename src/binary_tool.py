@@ -43,6 +43,10 @@ def binary_tanh_unit(x):
 '''
 #TODO: implement binary_tanh_unit
 
+def binary_tanh_unit(x):
+    return 2.*round(hard_sigmoid(x))-1.
+
+
 '''
 def binary_sigmoid_unit(x):
     return round(hard_sigmoid(x))

@@ -51,8 +51,8 @@ models.AddAccuracy(test_model, softmax, label)
 
 print('Training...')
 
-train_model.param_init_net.RunAllOnGPU()
-train_model.net.RunAllOnGPU()
+#train_model.param_init_net.RunAllOnGPU()
+#train_model.net.RunAllOnGPU()
 
 
 # The parameter initialization network only needs to be run once.
